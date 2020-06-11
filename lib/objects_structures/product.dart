@@ -44,7 +44,7 @@ List<Product> parseProduct(String responseBody) {
 }
 
 Future<List<Product>> fetchProduct() async {
-  var url = 'http://192.168.1.81/rova/productos/products.php';
+  var url = 'http://192.168.1.69/rova/productos/products.php';
   final http.Response response =  await http.get(url);
   return compute(parseProduct, response.body);
 }
