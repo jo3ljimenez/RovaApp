@@ -4,28 +4,15 @@ import 'package:rova_app/objects_structures/product.dart';
 import 'header.dart';
 
 class MenuSales extends StatefulWidget {
-
   @override
   _MenuSalesState createState() => _MenuSalesState();
 }
 
-class _MenuSalesState extends State<MenuSales> with AutomaticKeepAliveClientMixin<MenuSales>{
-  Future<List<Product>> _loadProducts;
-
-  @override
-  void initState(){
-    _loadProducts = fetchProduct(); //Solo crea el future una vez
-    super.initState();
-  }
-  
-  @override
-  bool get wantKeepAlive => true;
-
+class _MenuSalesState extends State<MenuSales>{
   @override
   Widget build(BuildContext context) {
-    super.build(context); //se usa para mantener activo el mixin
     return FutureBuilder(
-      future: _loadProducts,
+      future: fetchProduct(),
       builder: (context, snapshot){
         return _connectionState(snapshot);
       },

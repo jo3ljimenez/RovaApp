@@ -23,7 +23,11 @@ class TabSection extends StatelessWidget {
               child: TabBarView(
                 physics: NeverScrollableScrollPhysics(), //deshabilita las fisicas del scroll dentro de la tabbarview
                 children: [
-                  for (var value in newMap.values) TabViewStructure(listProducts: listProducts, idType: value[0].idTypeProduct),   
+                  for (var value in newMap.values) 
+                    TabViewStructure(
+                      listProducts: listProducts, 
+                      idType: value[0].idTypeProduct
+                    ),   
                 ]
               ),
             ),
