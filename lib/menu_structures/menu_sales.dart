@@ -3,12 +3,29 @@ import 'package:rova_app/menu_structures/tab_section.dart';
 import 'package:rova_app/objects_structures/product.dart';
 import 'header.dart';
 
-class MenuSales extends StatelessWidget {
+class MenuSales extends StatefulWidget {
+
+  @override
+  _MenuSalesState createState() => _MenuSalesState();
+}
+
+class _MenuSalesState extends State<MenuSales> with AutomaticKeepAliveClientMixin<MenuSales>{
+  Future<List<Product>> _loadProducts;
+
+  @override
+  void initState(){
+    _loadProducts = fetchProduct(); //Solo crea el future una vez
+    super.initState();
+  }
+  
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); //se usa para mantener activo el mixin
     return FutureBuilder(
-      future: fetchProduct(),
+      future: _loadProducts,
       builder: (context, snapshot){
         return _connectionState(snapshot);
       },
@@ -42,6 +59,7 @@ class MenuSales extends StatelessWidget {
     }
     return result;
   }
+
 }
 
 class CatalogProducts extends StatelessWidget {
@@ -63,7 +81,7 @@ class CatalogProducts extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     MenuHeader(),
-                   Expanded(
+                    Expanded(
                       child: Column(
                         children: <Widget>[
                           Container(
