@@ -23,6 +23,7 @@ class HomeMain extends StatefulWidget {
 class _HomeMain extends State<HomeMain> {
   final MenuSales _menuSales = new MenuSales();
   final MenuTicket _menuTicket = new MenuTicket(); 
+  
   GlobalKey _bottomNavigationKey = GlobalKey();
   int pageIndex = 1;
 

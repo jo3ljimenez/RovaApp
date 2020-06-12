@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:rova_app/objects_structures/product.dart';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
+import 'package:rova_app/objects_structures/ticket.dart';
+import 'package:rova_app/objects_structures/ticket_detail.dart';
 
 class TabSection extends StatelessWidget {
   final List<Product> listProducts;
@@ -113,7 +115,6 @@ class TabViewStructure extends StatelessWidget {
 
 class ProductStructure extends StatelessWidget {
   final Product product;
-
   const ProductStructure({
     Key key, 
     this.product
@@ -194,7 +195,6 @@ class ProductStructure extends StatelessWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600
                                   ),
-                                    
                                 ),
                                 FlatButton(
                                   child: Icon(
@@ -204,23 +204,7 @@ class ProductStructure extends StatelessWidget {
                                   shape: CircleBorder(),
                                   color: Colors.blue,
                                   onPressed: (){
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context){
-                                        return AlertDialog(
-                                          title: Text('Productos'),
-                                          content: Text('Agrego ${product.name}'),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              child: Text('Close'),
-                                              onPressed: (){
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      }
-                                    );
+                                    addToTicket();
                                   },
                                 ),
                               ],
@@ -239,4 +223,12 @@ class ProductStructure extends StatelessWidget {
     );
   }
 
+  void addToTicket(){
+    Ticket _ticket = new Ticket();
+    TicketDetail detail = new TicketDetail(
+      product: this.product,
+      quality: 1
+     );
+    _ticket.addProduct(detail);
+  }
 }
