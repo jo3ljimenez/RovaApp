@@ -1,6 +1,7 @@
 //import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rova_app/menu_structures/list_product_section.dart';
 import 'menu_structures/menu_sales.dart';
 
@@ -10,6 +11,16 @@ class RovaMain extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]); //No permite girar pantalla
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: 
+      Colors.transparent, 
+      statusBarBrightness: Brightness.light
+    )); //Hacer transparente el statusbar
+
     return MaterialApp(home: HomeMain());
   }
 }
@@ -43,6 +54,7 @@ class _HomeMain extends State<HomeMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       bottomNavigationBar: CurvedNavigationBar(
         index: pageIndex,
         color: Colors.red[700],
