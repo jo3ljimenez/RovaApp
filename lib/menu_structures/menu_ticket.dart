@@ -5,6 +5,9 @@ import 'package:rova_app/menu_structures/header.dart';
 import 'package:rova_app/objects_structures/ticket.dart';
 
 class MenuTicket extends StatefulWidget {
+  final Function functionNotificationQuality;
+
+  const MenuTicket({Key key, this.functionNotificationQuality}) : super(key: key); 
 
   @override
   _MenuTicket createState() => _MenuTicket();
@@ -37,7 +40,7 @@ class _MenuTicket extends State<MenuTicket> {
     setState(() {
       _ticket.detail[index].quality -= 1 ;
       if (_ticket.detail[index].quality == 0) {
-        _ticket.detail.removeAt(index);
+        _ticket.removeProduct(_ticket.detail[index]);
       }
     });
   }
@@ -131,6 +134,7 @@ class _MenuTicket extends State<MenuTicket> {
                                               child: Icon(Icons.arrow_drop_down),
                                               onPressed: (){
                                                 removeProductQuality(index);
+                                                widget.functionNotificationQuality();
                                               },
                                             ),
                                             Padding(
@@ -149,6 +153,7 @@ class _MenuTicket extends State<MenuTicket> {
                                               child: Icon(Icons.arrow_drop_up),
                                               onPressed: (){
                                                 addProductQuality(index);
+                                                widget.functionNotificationQuality();
                                               },
                                             ),
                                           ],
@@ -166,24 +171,6 @@ class _MenuTicket extends State<MenuTicket> {
                                       ],
                                     ),
                                   )
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.start,
-                                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                                  //   children: <Widget>[
-                                  //     FlatButton(
-                                  //       child: Icon(
-                                  //         Icons.arrow_drop_down,
-                                  //         color: Colors.white,
-                                  //       ),
-                                  //       shape: CircleBorder(),
-                                  //       color: Colors.blue,
-                                  //       onPressed: (){
-                                  //       },
-                                  //     ),
-                                  //     Text('${_ticket.detail[index].quality}'),
-                                  //   ],
-                                  // ),
-                                  // Expanded(child: Text('${formato.format(sumProduct(index, _ticket.detail[index].quality))}${formato.currencySymbol}'))
                                 ],
                               ),
                             ),

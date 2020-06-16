@@ -8,9 +8,9 @@ import 'package:rova_app/objects_structures/ticket_detail.dart';
 
 class TabSection extends StatelessWidget {
   final List<Product> listProducts;
-  final VoidCallback onAddProduct;
-  TabSection({Key key, this.listProducts, this.onAddProduct}) : super(key: key);
-
+  final Function functionNotificationQuality;
+  TabSection({Key key, @required this.listProducts, @required this.functionNotificationQuality}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     var newMap = groupBy(listProducts, (obj) => (obj as Product).typeProduct);
@@ -27,8 +27,9 @@ class TabSection extends StatelessWidget {
                 children: [
                   for (var value in newMap.values) 
                     TabViewStructure(
+                      functionNotificationQuality: functionNotificationQuality,
                       listProducts: listProducts, 
-                      idType: value[0].idTypeProduct
+                      idType: value[0].idTypeProduct,
                     ),   
                 ]
               ),
@@ -85,11 +86,12 @@ class TabStructure extends StatelessWidget {
 class TabViewStructure extends StatelessWidget {
   final List<Product> listProducts;
   final int idType;
+  final Function functionNotificationQuality;
 
   const TabViewStructure({
     Key key, 
     this.listProducts, 
-    this.idType
+    this.idType, @required this.functionNotificationQuality
   }) : super(key: key);
   
   @override
@@ -103,7 +105,7 @@ class TabViewStructure extends StatelessWidget {
         return Container(
           child: Column(
             children: <Widget>[
-              ProductStructure(product:filterList[index]),
+              ProductStructure(product:filterList[index], functionNotificationQuality: functionNotificationQuality,),
             ],
           ),
         );
@@ -115,10 +117,14 @@ class TabViewStructure extends StatelessWidget {
 
 class ProductStructure extends StatelessWidget {
   final Product product;
+  final Function functionNotificationQuality;
+  
   const ProductStructure({
     Key key, 
-    this.product
+    this.product, this.functionNotificationQuality
   }) : super(key: key);
+
+
   
   @override
   Widget build(BuildContext context) {
@@ -205,6 +211,7 @@ class ProductStructure extends StatelessWidget {
                                   color: Colors.blue,
                                   onPressed: (){
                                     addToTicket();
+                                    functionNotificationQuality();
                                   },
                                 ),
                               ],
@@ -230,5 +237,6 @@ class ProductStructure extends StatelessWidget {
       quality: 1
      );
     _ticket.addProduct(detail);
+    _ticket.countDetail();
   }
 }

@@ -4,6 +4,10 @@ import 'package:rova_app/objects_structures/product.dart';
 import 'header.dart';
 
 class MenuSales extends StatefulWidget {
+  final Function functionNotificationQuality;
+
+  MenuSales({Key key, this.functionNotificationQuality}) : super(key: key);
+
   @override
   _MenuSalesState createState() => _MenuSalesState();
 }
@@ -39,7 +43,7 @@ class _MenuSalesState extends State<MenuSales>{
         break;
       case ConnectionState.done:
         if (snapshot.hasData && snapshot.data != null) {
-          result = CatalogProducts(products: snapshot.data);
+          result = CatalogProducts(products: snapshot.data, functionNotificationQuality: widget.functionNotificationQuality);
         }
         break;
       case ConnectionState.active: //No hacer nada
@@ -51,10 +55,12 @@ class _MenuSalesState extends State<MenuSales>{
 
 class CatalogProducts extends StatelessWidget {
   final List<Product> products;
+  final Function functionNotificationQuality;
   
   const CatalogProducts({
     Key key, 
-    this.products
+    this.products, 
+    this.functionNotificationQuality
   }) : super(key: key);
 
   @override
@@ -73,7 +79,7 @@ class CatalogProducts extends StatelessWidget {
                         children: <Widget>[
                           Container(
                             height: 600,
-                            child: TabSection(listProducts: this.products,),
+                            child: TabSection(listProducts: this.products, functionNotificationQuality: functionNotificationQuality,),
                           ),
                         ],
                       )
