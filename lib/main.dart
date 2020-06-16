@@ -70,7 +70,7 @@ class _HomeMain extends State<HomeMain> with SingleTickerProviderStateMixin{
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext   context) {
       
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

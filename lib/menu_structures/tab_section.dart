@@ -115,7 +115,7 @@ class TabViewStructure extends StatelessWidget {
 
 }
 
-class ProductStructure extends StatelessWidget {
+class ProductStructure extends StatefulWidget {
   final Product product;
   final Function functionNotificationQuality;
   
@@ -124,119 +124,141 @@ class ProductStructure extends StatelessWidget {
     this.product, this.functionNotificationQuality
   }) : super(key: key);
 
-
-  
   @override
-  Widget build(BuildContext context) {
-    var formato  = new NumberFormat("#,##0.00", "es_mx");
-    return Card(
-      elevation: 10.0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 5.0),
-          child: SizedBox(
-            height: 90,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1.3,
-                  child: Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.network(
-                        product.urlImage,
-                        fit: BoxFit.fill,
-                      )
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 0, 2.0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                '${product.name}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  //color: Colors.red[900],
-                                  fontSize: 20
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 2.0),
-                                child: Text(
-                                  '${product.description}',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.black54
-                                  ),
-                                ),
-                              ),
-                            ], 
-                          ),
-                        ),
-                        Container(
-                          height: 30,
-                          child:  Expanded(
-                            flex: 1,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  '${formato.format(product.price)} ${formato.currencySymbol}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600
-                                  ),
-                                ),
-                                FlatButton(
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  shape: CircleBorder(),
-                                  color: Colors.blue,
-                                  onPressed: (){
-                                    addToTicket();
-                                    functionNotificationQuality();
-                                  },
-                                ),
-                              ],
-                            )
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ), 
-      ),
-    );
-  }
+  _ProductStructureState createState() => _ProductStructureState();
+}
 
-  void addToTicket(){
+class _ProductStructureState extends State<ProductStructure> with SingleTickerProviderStateMixin {
+  Animation animation;
+  AnimationController animationController;
+
+   void addToTicket(){
     Ticket _ticket = new Ticket();
     TicketDetail detail = new TicketDetail(
-      product: this.product,
+      product: this.widget.product,
       quality: 1
      );
     _ticket.addProduct(detail);
     _ticket.countDetail();
   }
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+        duration: Duration(milliseconds: 400),
+        vsync: this);
+
+    animation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: animationController, curve: Curves.fastOutSlowIn));
+    animationController.forward();
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var formato  = new NumberFormat("#,##0.00", "es_mx");
+    return FadeTransition(
+      opacity: animationController.drive(CurveTween(curve: Curves.easeOut)),
+      child: Card(
+        elevation: 5.0,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 5.0),
+            child: SizedBox(
+              height: 90,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: 1.3,
+                    child: Container(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.network(
+                          widget.product.urlImage,
+                          fit: BoxFit.fill,
+                        )
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 2.0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  '${widget.product.name}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    //color: Colors.red[900],
+                                    fontSize: 20
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 2.0),
+                                  child: Text(
+                                    '${widget.product.description}',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.black54
+                                    ),
+                                  ),
+                                ),
+                              ], 
+                            ),
+                          ),
+                          Container(
+                            height: 30,
+                            child:  Expanded(
+                              flex: 1,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    '${formato.format(widget.product.price)} ${formato.currencySymbol}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
+                                    color: Colors.blue,
+                                    onPressed: (){
+                                      addToTicket();
+                                      widget.functionNotificationQuality();
+                                    },
+                                  ),
+                                ],
+                              )
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ), 
+        ),
+      ),
+    );
+  }
+
 }
