@@ -53,4 +53,7 @@ class Ticket{
     return totalDetail;
   }
 
+  void clearList(){
+    _ticket.detail.clear();
+  }
 }
