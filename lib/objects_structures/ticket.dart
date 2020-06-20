@@ -3,7 +3,7 @@ import 'package:rova_app/objects_structures/ticket_detail.dart';
 
 class Ticket{
   List<TicketDetail> detail = new List<TicketDetail>();
-  String mesa;
+  String client;
   static final Ticket _ticket = Ticket._internal();
   Ticket._internal();
 
@@ -24,6 +24,13 @@ class Ticket{
       _ticket.detail.add(noteDetail);
     }
     
+  }
+
+  void addClient(String client){
+    try {
+      _ticket.client = client;
+    } catch (e) {
+    }
   }
 
   void removeProduct(TicketDetail noteDetail){
@@ -55,5 +62,17 @@ class Ticket{
 
   void clearList(){
     _ticket.detail.clear();
+    _ticket.client = null;
+    }
+
+  double getTotalPrice(){
+    double total = 0;
+
+    for (var detail in _ticket.detail) {
+      total += detail.product.price * detail.quality;      
+    }
+
+    return total;
   }
+
 }

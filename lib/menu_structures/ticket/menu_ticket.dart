@@ -3,25 +3,37 @@ import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:rova_app/menu_structures/header.dart';
+import 'package:rova_app/menu_structures/ticket/text_note_structure.dart';
 import 'package:rova_app/objects_structures/ticket.dart';
 
 class MenuTicket extends StatefulWidget {
   final Function functionNotificationQuality;
-
-  const MenuTicket({Key key, this.functionNotificationQuality}) : super(key: key); 
-
+  const MenuTicket({Key key, this.functionNotificationQuality}) : super(key: key);
+  
   @override
   _MenuTicket createState() => _MenuTicket();
 }
 
 class _MenuTicket extends State<MenuTicket> {
-  Ticket _ticket = new Ticket();
+  Ticket _ticket;
+  TextEditingController _textController;
+  FocusNode _focusNode;
 
-  void addItemToList(){
-    setState(() {
-    });
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _textController = TextEditingController();
+    _ticket = Ticket();
+    loadClient();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+    _textController.dispose();
+  }  
 
   double sumProduct(int index, int qualty){
     double total = 0;
@@ -92,6 +104,7 @@ class _MenuTicket extends State<MenuTicket> {
             onPressed: (){
               setState(() {
                 _ticket.clearList();
+                _textController.clear();
                 widget.functionNotificationQuality();
               });
               Navigator.pop(context);
@@ -103,52 +116,97 @@ class _MenuTicket extends State<MenuTicket> {
     }
   }
   
+  void loadClient(){
+    if(_ticket.client != null && _ticket.detail.isNotEmpty){
+      _textController.text = _ticket.client;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var formato  = new NumberFormat("#,##0.00", "es_mx");
-    return Theme(
-      data: ThemeData(
-        primaryColor: Colors.red[700],
-        primaryColorDark: Colors.red[700],
-        hintColor: Colors.transparent
+    var moneyFormat  = new NumberFormat("#,##0.00", "es_mx");
+    return Scaffold(
+      appBar: AppBar(
+        title: null,
+        backgroundColor: Colors.red[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.elliptical(280,25)
+          )
+        ),
+        elevation: 10,
       ),
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            MenuHeader(),
-            Container(
-              //color: Colors.red[700],
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: TextFormField(
+      body: Padding(
+        padding: EdgeInsets.only(top: 30),
+              child: Container(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(30, 0, 30, 20),
+                child: TextField(
+                  cursorColor: Colors.blue[700],
+                  focusNode: _focusNode,
+                  controller: _textController,
                   decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(90.0)),
-                      borderSide: BorderSide(color: Colors.black),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear), 
+                      onPressed: (){
+                        _textController.clear();
+                      }
                     ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 30),
                     border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(90.0)),
-                      borderSide: BorderSide(color: Colors.black),
+                      gapPadding: 5,
+                      borderSide: BorderSide(
+                        color: Colors.blue
                       ),
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ), 
-                    hintStyle: TextStyle(
-                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(90.0)),
                     ),
-                    filled: true,
-                    fillColor: Colors.white24,
-                    hintText: 'Cliente',
+                    labelText: 'Cliente',
+                    hintMaxLines: 1,
+                  ),
+                  onEditingComplete: (){
+                    _ticket.addClient(_textController.text);
+                    _focusNode.unfocus();
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    '${moneyFormat.format(_ticket.getTotalPrice())} ${moneyFormat.currencySymbol}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.green[700],
+                      fontSize: 30
+                    ),                
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child:Card(
-                elevation: 5,
-                
-                child: Stack(
+              SizedBox(
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 5,
+                        color: Colors.grey,
+                        offset: Offset(0, 2),
+                        spreadRadius: 2
+                      )
+                    ]
+                  ),
+                  child: Divider(
+                    color: Colors.grey[400],
+                    height: 1,
+                    thickness: 2,
+                  ),
+                ),
+                height: 1,
+              ),
+              Expanded(
+                child:Stack(
                   children: [
                     ListView.builder(
                       padding: const EdgeInsets.all(8),
@@ -163,14 +221,14 @@ class _MenuTicket extends State<MenuTicket> {
                             children: <Widget>[
                               Card(
                                 elevation: 15.0,
-                                margin: EdgeInsets.only(left: 46.0),
+                                margin: EdgeInsets.fromLTRB(46, 0, 10, 0),
                                 child: Container(
                                   height: 124.0,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsets.fromLTRB(50, 10, 10, 0),
+                                    padding: EdgeInsets.fromLTRB(50, 0, 10, 0),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,20 +239,37 @@ class _MenuTicket extends State<MenuTicket> {
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: <Widget>[
-                                                Text(
-                                                  _ticket.detail[index].product.name,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    //color: Colors.red[700],
-                                                    fontSize: 20.0,
-                                                    fontWeight: FontWeight.w800
-                                                  ),
+                                                Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      _ticket.detail[index].product.name,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                        //color: Colors.red[700],
+                                                        fontSize: 20.0,
+                                                        fontWeight: FontWeight.w800
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${moneyFormat.format(_ticket.detail[index].product.price)} ${moneyFormat.currencySymbol}',
+                                                      style: TextStyle(
+                                                        color: Colors.green[700],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
+                                                IconButton(
+                                                  icon: Image.asset('assets/images/note.png'), 
+                                                  onPressed: (){
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => TextNoteStructure(indexDetail: index)));
+                                                  }
+                                                ) 
                                               ],
                                             ),
-                                            Text('${formato.format(_ticket.detail[index].product.price)} ${formato.currencySymbol}'),
                                           ],
                                         ),
                                         Padding(
@@ -205,14 +280,22 @@ class _MenuTicket extends State<MenuTicket> {
                                             children: <Widget>[
                                               Row(
                                                 children: <Widget>[
-                                                  FloatingActionButton(
-                                                    mini: true,
-                                                    elevation: 3.0,
-                                                    child: Icon(Icons.arrow_drop_down),
-                                                    onPressed: (){
-                                                      _removeProductQuality(index);
-                                                      widget.functionNotificationQuality();
-                                                    },
+                                                  ClipOval(
+                                                    child: Material(
+                                                      color: Colors.blue, // button color
+                                                      child: InkWell(
+                                                        splashColor: Colors.white10, // inkwell color
+                                                        child: SizedBox(
+                                                          width: 40, 
+                                                          height: 40, 
+                                                          child: Icon(Icons.remove, color: Colors.white)
+                                                        ),
+                                                        onTap: () {
+                                                          _removeProductQuality(index);
+                                                          widget.functionNotificationQuality();
+                                                        },
+                                                      ),
+                                                    ),
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -224,24 +307,32 @@ class _MenuTicket extends State<MenuTicket> {
                                                       ),
                                                     ),
                                                   ),
-                                                  FloatingActionButton(
-                                                    mini: true,
-                                                    elevation: 3.0,
-                                                    child: Icon(Icons.arrow_drop_up),
-                                                    onPressed: (){
-                                                      _addProductQuality(index);
-                                                      widget.functionNotificationQuality();
-                                                    },
+                                                  ClipOval(
+                                                    child: Material(
+                                                      color: Colors.blue, // button color
+                                                      child: InkWell(
+                                                        splashColor: Colors.white10, // inkwell color
+                                                        child: SizedBox(
+                                                          width: 40, 
+                                                          height: 40, 
+                                                          child: Icon(Icons.add, color: Colors.white)
+                                                        ),
+                                                        onTap: () {
+                                                          _addProductQuality(index);
+                                                          widget.functionNotificationQuality();
+                                                        },
+                                                      ),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                               Stack(
                                                 children: <Widget>[
                                                   Text(
-                                                    '${formato.format(sumProduct(index, _ticket.detail[index].quality))} ${formato.currencySymbol}',
+                                                    '${moneyFormat.format(sumProduct(index, _ticket.detail[index].quality))} ${moneyFormat.currencySymbol}',
                                                     style: TextStyle(
+                                                      fontWeight: FontWeight.w600,
                                                       color: Colors.green[700],
-                                                      fontSize: 15
                                                     ),
                                                   )
                                                 ],
@@ -285,8 +376,8 @@ class _MenuTicket extends State<MenuTicket> {
                       }
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: CircularMenu(
+                      padding: EdgeInsets.only(bottom: 60),
+                                          child: CircularMenu(
                         alignment: Alignment.centerRight,
                         animationDuration: Duration(milliseconds: 400),
                         toggleButtonColor: Colors.red[700],
@@ -297,10 +388,7 @@ class _MenuTicket extends State<MenuTicket> {
                         reverseCurve: Curves.easeInOutBack,
                         toggleButtonBoxShadow: [
                           BoxShadow(
-                            blurRadius: 10,
-                            color: Colors.grey,
-                            offset: Offset(-1, 5),
-                            spreadRadius: 2
+                            color: Colors.transparent,
                           )
                         ],
                         items: [
@@ -308,12 +396,12 @@ class _MenuTicket extends State<MenuTicket> {
                           _circularMenuItemStructure(Icons.clear_all,  Colors.red[700], _clearProductList),
                         ]
                       ),
-                    ),
+                    ), 
                   ],
-                ),
-              ), 
-            ),
-          ],
+                ), 
+              ),
+            ],
+          ),
         ),
       ),
     );

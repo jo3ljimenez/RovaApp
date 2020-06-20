@@ -185,67 +185,64 @@ class _ProductStructureState extends State<ProductStructure> with SingleTickerPr
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 0, 2.0, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 2.0, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  '${widget.product.name}',
-                                  maxLines: 1,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                '${widget.product.name}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  //color: Colors.red[900],
+                                  fontSize: 20
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 2.0),
+                                child: Text(
+                                  '${widget.product.description}',
+                                  maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    //color: Colors.red[900],
-                                    fontSize: 20
+                                    fontSize: 14.0,
+                                    color: Colors.black54
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 2.0),
-                                  child: Text(
-                                    '${widget.product.description}',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.black54
-                                    ),
-                                  ),
-                                ),
-                              ], 
-                            ),
+                              ),
+                            ], 
                           ),
                           Container(
                             height: 30,
-                            child:  Expanded(
-                              flex: 1,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    '${formato.format(widget.product.price)} ${formato.currencySymbol}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600
-                                    ),
+                            child:  Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  '${formato.format(widget.product.price)} ${formato.currencySymbol}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.green[700],
                                   ),
-                                  FlatButton(
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                    color: Colors.blue,
-                                    onPressed: (){
-                                      addToTicket();
-                                      widget.functionNotificationQuality();
-                                    },
+                                ),
+                                FlatButton(
+                                  
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
                                   ),
-                                ],
-                              )
+                                  color: Colors.blue,
+                                  onPressed: (){
+                                    addToTicket();
+                                    widget.functionNotificationQuality();
+                                  },
+                                ),
+                              ],
                             ),
                           )
                         ],

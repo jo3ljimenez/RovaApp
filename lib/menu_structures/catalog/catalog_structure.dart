@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:rova_app/menu_structures/tab_section.dart';
+import 'package:rova_app/menu_structures/catalog/tab_section.dart';
 import 'package:rova_app/objects_structures/product.dart';
-import 'header.dart';
 
-class MenuSales extends StatefulWidget {
+class CatalogStructure extends StatefulWidget {
   final Function functionNotificationQuality;
 
-  MenuSales({Key key, this.functionNotificationQuality}) : super(key: key);
+  CatalogStructure({Key key, this.functionNotificationQuality}) : super(key: key);
 
   @override
-  _MenuSalesState createState() => _MenuSalesState();
+  _CatalogStructure createState() => _CatalogStructure();
 }
 
-class _MenuSalesState extends State<MenuSales>{
+class _CatalogStructure extends State<CatalogStructure>{
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -67,25 +66,25 @@ class CatalogProducts extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (context, constraint){
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraint.maxHeight),
-              child: IntrinsicHeight(
-                child: Column(
-                  children: <Widget>[
-                    MenuHeader(),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 600,
+          return ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraint.maxHeight),
+            child: IntrinsicHeight(
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 30),
+                          child: Container(
+                            height:  MediaQuery.of(context).size.height -118,//Tengo que arreglar esto :V
                             child: TabSection(listProducts: this.products, functionNotificationQuality: functionNotificationQuality,),
                           ),
-                        ],
-                      )
-                    ),
-                  ],
-                ),
+                        ),
+                      ],
+                    )
+                  ),
+                ],
               ),
             ),
           );
